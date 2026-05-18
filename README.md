@@ -1,42 +1,65 @@
-This is a base node js project template, which anyone can use as it has been prepared, by keeping some of the most important code principles and project management recommendations. Feel free to change anything.
+# Flight Booking Service
 
-src -> Inside the src folder all the actual source code regarding the project will reside, this will not include any kind of tests. (You might want to make separate tests folder)
+This repository contains the **Flight Booking Service**, a microservice which handles ticketing and seat booking functionality for an overarching **Airline Booking Backend Project**.
 
-Lets take a look inside the src folder
+## Tech Stack
+* **Node.js** & **Express.js** for the core server
+* **Sequelize (ORM)** & **MySQL2** for database interaction
+* **Winston** for logging and error tracking
+* **Dotenv** for environment variable management
 
-config -> In this folder anything and everything regarding any configurations or setup of a library or module will be done. For example: setting up dotenv so that we can use the environment variables anywhere in a cleaner fashion, this is done in the server-config.js. One more example can be to setup you logging library that can help you to prepare meaningful logs, so configuration for this library should also be done here.
+## Project Architecture
+This service uses a layered architecture pattern:
+* **Routes**: Intercepts requests and maps them to controllers.
+* **Middlewares**: Request interceptors for validation and authentication.
+* **Controllers**: Extracts request data, calls services, structures the API response, and sends the output.
+* **Services**: Defines the core business logic.
+* **Repositories**: Data access layer handles raw database queries and ORM methods.
+* **Models / Migrations**: Defines database structure (using Sequelize).
+* **Utils**: Helper methods, custom error classes (`AppError`), ENUMs, and standardized API JSON responses (`success-response`, `error-response`).
 
-routes -> In the routes folder, we register a route and the corresponding middleware and controllers to it.
+## Implemented So Far
+* **Base Skeleton Structure**: A clean and robust boilerplate set up with routes, controllers, services, repositories, models, and custom utilities.
+* **API Health Check**: Baseline endpoint `GET /api/v1/info` is configured.
+* **Database Modeling**: Model and Migrations created for the `Bookings` table containing:
+  * `id` (Primary Key)
+  * `flightId`
+  * `userId`
+  * `status` (Enum restricted to: `BOOKED`, `CANCELLED`, `INITIATED`, `PENDING`)
+  * `noOfSeats`
+  * `totalCost`
+* **Repository Pattern**: Extensible `crud-repository` base class configured, with `booking-repository` extending it.
+* **Modular Setup**: Scaffolded `booking-service` and `booking-controller` ready for business logic integration.
 
-middlewares -> they are just going to intercept the incoming requests where we can write our validators, authenticators etc.
+## Setup the project
 
-controllers -> they are kind of the last middlewares as post them you call you business layer to execute the business logic. In controllers we just receive the incoming requests and data and then pass it to the business layer, and once business layer returns an output, we structure the API response in controllers and send the output.
+1. **Clone & Install Dependencies**
+   ```bash
+   npm install
+   ```
 
-repositories -> this folder contains all the logic using which we interact the DB by writing queries, all the raw queries or ORM queries will go here.
+2. **Environment Variables**
+   Create a `.env` file in the root directory and add the port:
+   ```env
+   PORT=3000
+   ```
 
-services -> contains the buiness logic and interacts with repositories for data from the database
+3. **Database Configuration**
+   By default, `Sequelize` setup expects DB credentials in `src/config/config.json`.
+   Configure the `development` environment with your `username`, `password`, `database`, and `dialect` (e.g., `mysql`).
 
-utils -> contains helper methods, error classes etc.
+4. **Initialize and Migrate**
+   Inside the **root folder**, create the database and run migrations:
+   ```bash
+   npx sequelize db:create
+   ```
+   *Note: If `npx sequelize db:migrate` fails to find config, ensure you run from `src/` directory:*
+   ```bash
+   cd src
+   npx sequelize db:migrate
+   ```
 
-Setup the project
-Download this template from github and open it in your favourite text editor.
-Go inside the folder path and execute the following command:
-npm install
-In the root directory create a .env file and add the following env variables
-
-    PORT=<port number of your choice>
-ex:
-
-    PORT=3000
-go inside the src folder and execute the following command:
-
-  npx sequelize init
-By executing the above command you will get migrations and seeders folder along with a config.json inside the config folder.
-
-If you're setting up your development environment, then write the username of your db, password of your db and in dialect mention whatever db you are using for ex: mysql, mariadb etc
-
-If you're setting up test or prod environment, make sure you also replace the host with the hosted db url.
-
-To run the server execute
-
-npm run dev
+5. **Start the Server**
+   ```bash
+   npm run dev
+   ``` 
