@@ -9,6 +9,7 @@ const CRON = require('./utils/common/cron-jobs');
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));  //extended true or false doesnot matter it is just for choosing library 1)query string(false) and 2)qs lib(true)
 app.use('/api',apiRoutes);
+app.use('/bookingService/api',apiRoutes);
 app.listen(ServerConfig.PORT,()=>{
     console.log(`Successfully started the server on PORT: ${ServerConfig.PORT}`);
     CRON();
