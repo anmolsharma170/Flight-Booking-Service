@@ -81,7 +81,6 @@ async function cancelBooking(bookingId){
         await transaction.rollback();
         throw error;
     }
-    
 }
 
 async function canceloldBookings(){
